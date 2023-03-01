@@ -61,8 +61,8 @@ resource "aws_lb" "load_balancer" {
 # Setup Load Balancer for EC2 Instances 1 and 2
 resource "aws_lb_listener" "http" {
   load_balancer_arn = aws_lb.load_balancer.arn
-  port = 80
-  protocol = "HTTP"
+  port              = 80
+  protocol          = "HTTP"
 
   # By default, return a simple 404 page
   default_action {
