@@ -1,0 +1,52 @@
+- hosts: server
+  vars:
+    db_host: { db_host_rds }
+    db_port: 5432
+    db_user: { db_user_rds }
+    db_password: { db_password_rds }
+    db_name: { db_name_rds }
+  tasks:
+    - name: Install Git and Golang
+      apt:
+        name:
+          - git
+          - golang
+
+    - name: Clone Golang application repository
+      git:
+        repo: https://github.com/faridlamaul/simple-web-server-devops.git
+        dest: /home/ubuntu/simple-web-server-devops
+        version: master
+
+    - name: Install Golang dependencies
+      command: "cd /home/ubuntu/simple-web-server-devops/app && go mod download"
+
+    - name: Install PostgreSQL client
+      apt:
+        name: postgresql-client
+
+    - name: Copy PostgreSQL SSL certificate
+      copy:
+        src: /home/ubuntu/rds-combined-ca-bundle.pem
+        dest: /etc/postgresql/12/main/rds-combined-ca-bundle.pem
+        owner: postgres
+        group: postgres
+        mode: 0600
+
+    - name: Set PostgreSQL environment variables
+      lineinfile:
+        dest: /etc/environment
+        line: |
+          DB_HOST="{{ db_host }}"
+          DB_PORT="{{ db_port }}"
+          DB_USER="{{ db_user }}"
+          DB_PASSWORD="{{ db_password }}"
+          DB_NAME="{{ db_name }}"
+
+    - name: Restart PostgreSQL service
+      systemd:
+        name: postgresql@12-main
+        state: restarted
+
+    - name: Start Golang application
+      command: "cd /home/ubuntu/simple-web-server-devops/app && go run main.go"
