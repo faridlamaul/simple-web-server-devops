@@ -18,9 +18,8 @@ variable "instance_type" {
   default     = "t2.micro"
 }
 
-# Route 53 Variables
-variable "domain" {
-  description = "Domain for website"
+variable "key_name" {
+  description = "Name of key pair to use for ec2 instance"
   type        = string
 }
 

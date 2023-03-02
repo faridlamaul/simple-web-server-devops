@@ -1,39 +1,56 @@
-# Create a security group
-resource "aws_security_group" "sg_instances" {
-  name        = "sg_ec2_instances"
-  description = "Allow HTTP and SSH traffic"
-  vpc_id      = data.aws_vpc.default_vpc.id
+# Create security groups for webserver and db
+resource "aws_security_group" "webserver_sg" {
+  name_prefix = "webserver-sg"
+
+  # Allow traffic from anywhere on port 80
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow traffic from anywhere on port 3000
+  ingress {
+    from_port   = 3000
+    to_port     = 3000
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow traffic from anywhere on port 22
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  # Allow traffic to anywhere
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
-resource "aws_security_group_rule" "allow_http_inbound" {
-  from_port         = 3000
-  protocol          = "tcp"
-  security_group_id = aws_security_group.sg_instances.id
-  to_port           = 3000
-  type              = "ingress"
-  cidr_blocks       = ["0.0.0.0/0"]
-}
+resource "aws_security_group" "db_sg" {
+  name_prefix = "db-sg"
 
-resource "aws_security_group" "alb" {
-  name = "alb-security-group"
-}
+  # Allow traffic from anywhere on port 5432
+  ingress {
+    from_port   = 5432
+    to_port     = 5432
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 
-resource "aws_security_group_rule" "allow_alb_http_inbound" {
-  type              = "ingress"
-  security_group_id = aws_security_group.alb.id
-
-  from_port   = 80
-  to_port     = 80
-  protocol    = "tcp"
-  cidr_blocks = ["0.0.0.0/0"]
-}
-
-resource "aws_security_group_rule" "allow_alb_all_outbound" {
-  type              = "egress"
-  security_group_id = aws_security_group.alb.id
-
-  from_port   = 0
-  to_port     = 0
-  protocol    = "-1"
-  cidr_blocks = ["0.0.0.0/0"]
+  # Allow traffic to anywhere
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }

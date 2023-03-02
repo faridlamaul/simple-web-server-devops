@@ -1,0 +1,4 @@
+key_name = { "KeyName" }
+db_name  = { "DBName" }
+db_user  = { "DBUser" }
+db_pass  = { "DBPassword" }
