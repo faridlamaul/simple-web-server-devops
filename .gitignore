@@ -7,6 +7,10 @@
 *.o
 *.so
 
+# Environment #
+########
+.env
+
 # IDEA #
 ########
 .idea/
@@ -15,7 +19,8 @@
 #############
 # Local .terraform directories
 **/.terraform/*
-*.terraform*
+*.terraform
+*.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate
