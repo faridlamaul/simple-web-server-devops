@@ -5,9 +5,7 @@
 2. AWS RDS (Postgres) untuk database
 3. AWS CloudWatch untuk monitoring
 4. Terraform untuk provisioning AWS resources
-5. Ansible untuk provisioning Webserver
-6. Docker untuk menjalankan Webserver
-7. Docker Compose untuk menjalankan Webserver dan Database
+5. Ansible untuk configuration webserver
 
 ### Cara menjalankan
 1. Clone repository ini
